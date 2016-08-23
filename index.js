@@ -43,12 +43,9 @@ lambda.use((call, response, next) => {
       .then((data) => {
         if (!data) return;
         // send the result to the client
-        return Promise.promisify(response.emitResultEvent)({ items: [ data ] }).then(() => data);
+        return Promise.promisify(response.emitResultEvent)({ items: [ data ] });
       });
-  }, { concurrency: 3 })
-  .then((results) => {
-    response.data = results.filter(o => o);
-  });
+  }, { concurrency: 3 });
 });
 
 // emit a complate event to the client
@@ -58,7 +55,7 @@ lambda.use((call, response, next) => {
 
 // send callback
 lambda.use((call, response) => {
-  response.send(response.data);
+  response.send();
 });
 
 module.exports = {
