@@ -1,4 +1,5 @@
 'use strict';
+require('env2')('.env');
 
 const Promise = require('bluebird');
 const sauce = require('mintsauce');

@@ -20,6 +20,7 @@
   "dependencies": {
     "bluebird": "^3.4.1",
     "dpl": "^3.5.0",
+    "env2": "^2.1.1",
     "mintsauce": "^0.1.0"
   },
   "files_to_deploy": [
