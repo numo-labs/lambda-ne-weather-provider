@@ -19,7 +19,8 @@ lambda.use((call, response, next) => {
     provider: call.name
   };
   response.emitResultEvent = (data, callback) => {
-    const topic = `${process.env.SEARCH_RESULT_TOPIC}-${call.version}`;
+    const version = call.version === '$LATEST' ? 'ci' : call.version;
+    const topic = `${process.env.SEARCH_RESULT_TOPIC}-${version}`;
     const payload = Object.assign(data, params);
     response.sns.send(topic, payload, callback);
   };
