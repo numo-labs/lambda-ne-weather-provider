@@ -9,13 +9,18 @@ const lookup = require('./lib/lookup-climate');
 // setup sns helpers
 lambda.use(sauce.middleware.SNS);
 
-// create common parameters used to send results to client
+// create a response method to send results to client
 lambda.use((call, response, next) => {
-  response.params = {
+  const params = {
     id: call.body.context.connectionId,
     searchId: call.body.context.searchId,
     userId: 1,
     provider: call.name
+  };
+  response.emitResultEvent = (data, callback) => {
+    const topic = `${process.env.SEARCH_RESULT_TOPIC}-${call.version}`;
+    const payload = Object.assign(data, params);
+    response.sns.send(topic, payload, callback);
   };
   next();
 });
@@ -35,9 +40,8 @@ lambda.use((call, response, next) => {
     return lookup(destination)
       .then((data) => {
         if (!data) return;
-        // send the result to the client via sns
-        const output = Object.assign({ items: [ data ] }, response.params);
-        return Promise.promisify(response.sns.send)('search-results-v1-ci', output).then(() => data);
+        // send the result to the client
+        return Promise.promisify(response.emitResultEvent)({ items: [ data ] }).then(() => data);
       });
   }, { concurrency: 3 })
   .then((results) => {
@@ -47,8 +51,7 @@ lambda.use((call, response, next) => {
 
 // emit a complate event to the client
 lambda.use((call, response, next) => {
-  const output = Object.assign({ searchComplete: true }, response.params);
-  response.sns.send('search-results-v1-ci', output, (e) => next(e));
+  response.emitResultEvent({ searchComplete: true }, (e) => next(e));
 });
 
 // send callback
