@@ -1,0 +1,35 @@
+{
+  "name": "lambda-ne-weather-provider",
+  "version": "1.0.0",
+  "description": "Provides the weather based on lat lon",
+  "main": "index.js",
+  "scripts": {
+    "test": "semistandard ./lib index.js",
+    "deploy": "dpl"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/numo-labs/lambda-ne-weather-provider.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/numo-labs/lambda-ne-weather-provider/issues"
+  },
+  "homepage": "https://github.com/numo-labs/lambda-ne-weather-provider#readme",
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "dpl": "^3.5.0",
+    "env2": "^2.1.1",
+    "mintsauce": "^0.1.0"
+  },
+  "files_to_deploy": [
+    "package.json",
+    "index.js",
+    "/lib",
+    ".env"
+  ],
+  "devDependencies": {
+    "semistandard": "^8.0.0"
+  }
+}
